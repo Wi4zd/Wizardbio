@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Bio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Embed Do DC -->
+    <meta content="Wizard Bio" property="og:title" />
+    <meta content="Bio Site Of @WizardGaming" property="og:description" />
+    <meta content="localhost" property="og:url" />
+    <meta content="https://i.postimg.cc/Vkbnwdtp/IMG-20250105-141147-084.jpg" property="og:image" />
+    <meta content="#000000" data-react-helmet="true" name="theme-color" />
+
+    <style>
+        /* General styles */
+        body {
+            margin: 0;
+            font-family: 'Comfortaa', sans-serif;
+            background: black;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .caption {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .card-container {
+            text-align: center;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px black, 0 0 20px black, 0 0 30px black, 0 0 40px black;
+            animation: glowing 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glowing {
+            0% {
+                box-shadow: 0 0 10px black, 0 0 20px black, 0 0 30px black;
+            }
+            50% {
+                box-shadow: 0 0 25px black, 0 0 35px black, 0 0 50px black;
+            }
+            100% {
+                box-shadow: 0 0 10px black, 0 0 20px black, 0 0 30px black;
+            }
+        }
+
+        .nick {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #bbb;
+            text-shadow: 
+                0 0 5px black, 
+                0 0 10px black, 
+                0 0 15px black;
+            animation: textGlow 1.5s ease-in-out infinite;
+        }
+
+        .song-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 
+                0 0 5px black, 
+                0 0 10px black, 
+                0 0 15px black, 
+                0 0 20px black, 
+                0 0 25px black;
+            animation: textGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px black, 0 0 10px black, 0 0 15px black;
+            }
+            50% {
+                text-shadow: 0 0 20px black, 0 0 30px black, 0 0 40px black;
+            }
+            100% {
+                text-shadow: 0 0 5px black, 0 0 10px black, 0 0 15px black;
+            }
+        }
+
+        .icon-links a {
+            color: white;
+            font-size: 29px;
+            margin: 0 10px;
+            text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000;
+            transition: all 0.4s ease;
+        }
+
+        .icon-links a:hover {
+            color: #000;
+            transform: scale(1.2);
+            text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px #000;
+        }
+
+        .song-card {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            position: relative;
+            transition: box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .song-card:hover {
+            box-shadow: 0 0 80px rgba(255, 255, 255, 0.6);
+        }
+
+        .song-card .song-cover img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+
+        .song-info {
+            text-align: left;
+        }
+
+        .song-author {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        /* Window-specific styles */
+        .window-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .window-header {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: move;
+        }
+
+        .window-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px black;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin-left: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .minimize-btn {
+            background-color: #ffbd44;
+        }
+
+        .maximize-btn {
+            background-color: #00ca56;
+        }
+
+        .close-btn {
+            background-color: #ff605c;
+        }
+
+        .window-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .window-content {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Audio Control Button */
+        .audio-control {
+            position: fixed;
+            top: 10px;
+            left: 70%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .audio-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .audio-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-text {
+            color: #fff;
+            background-color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            white-space: nowrap;
+        }
+
+        .audio-text.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Overlay for when window is open */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .window-container {
+                width: 95%;
+                height: auto;
+                max-height: 80vh;
+            }
+            
+            .audio-control {
+                left: 80%;
+            }
+        }
+
+        /* Animation for window appearance */
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .window-container.open {
+            display: block;
+            animation: windowOpen 0.3s ease-out;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comfortaa', sans-serif;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video -->
+    <div class="video-container">
+        <video autoplay  loop>
+            <source src="wizardbg.mp4" type="video/mp4" />
+        </video>
+        <!-- Background Music 
+        <audio id="bgMusic" autoplay loop>
+            <source src="wizardmusic.mp3" type="audio/mpeg" />
+        </audio>-->
+    </div>
+
+    <!-- Content Section -->
+    <div class="caption">
+        <div class="card-container">
+            <div class="card">
+                <!-- Logo -->
+                <div class="logo">
+                    <img src="pfp.jpg" alt="Logo">
+                </div>
+                <!-- Name -->
+                <div class="nick">Wizard</div>
+                <!-- Links -->
+                <div class="icon-links">
+                    <a href="https://t.me/wi4zd" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://github.com/wi4zd" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://www.instagram.com/wi4zd" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+                <!-- Song Card -->
+                <div class="song-card" id="aboutMeBtn">
+                    <div class="song-cover">
+                        <img src="Photo.jpg" alt="Okładka">
+                    </div>
+                    <div class="song-info">
+                        <div class="song-title">Wizard</div>
+                        <div class="song-author">Developer × Programmer</div>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+                
+                
+
+    <!--Audio Control Button -->
+    <!--
+    <div class="audio-control" id="audioControl">
+        <div class="audio-icon" id="audioIcon"><i class="fas fa-volume-up"></i></div>
+        <div class="audio-text" id="audioText">Tap To Play Music</div>
+    </div>-->
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- About Me Window -->
+    <div class="window-container" id="aboutWindow">
+        <div class="window-header" id="aboutHeader">
+            <div class="window-title">About Me</div>
+            <div class="window-controls">
+                <div class="window-btn minimize-btn">−</div>
+                <div class="window-btn maximize-btn">+</div>
+                <div class="window-btn close-btn">×</div>
+            </div>
+        </div>
+        <div class="window-content">
+            <p>Hello! I'm Wizard, a developer and programmer passionate about creating amazing digital experiences.</p>
+            <p>I specialize in web development, game development, and various programming languages including JavaScript, Python, and C++.</p>
+            <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or gaming.</p>
+        </div>
+    </div>
+
+
+    <script>
+        // Audio control functionality
+        const bgMusic = document.getElementById('bgMusic');
+        const audioControl = document.getElementById('audioControl');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        let isPlaying = true;
+
+        // Function to toggle audio play/pause
+        /*
+        function toggleAudio() {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioIcon.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                bgMusic.play();
+                audioIcon.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+            isPlaying = !isPlaying;
+        }*/
+
+        // Function to animate text
+        function animateText() {
+            audioText.classList.add('active');
+            setTimeout(() => {
+                audioText.classList.remove('active');
+            }, 1000);
+
+            // Repeat animation every 5 seconds
+            setTimeout(animateText, 5000);
+        }
+
+        // Window functionality
+        const overlay = document.getElementById('overlay');
+        const aboutWindow = document.getElementById('aboutWindow');
+        const projectsWindow = document.getElementById('projectsWindow');
+        const contactWindow = document.getElementById('contactWindow');
+        const aboutBtn = document.getElementById('aboutMeBtn');
+        const projectsBtn = document.getElementById('projectsBtn');
+        const contactBtn = document.getElementById('contactBtn');
+        
+        // Make windows draggable
+        function makeDraggable(element, header) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            header.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Get the mouse cursor position at startup
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // Call a function whenever the cursor moves
+                document.onmousemove = elementDrag;
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Calculate the new cursor position
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // Set the element's new position
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+                element.style.transform = 'none';
+            }
+            
+            function closeDragElement() {
+                // Stop moving when mouse button is released
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        
+        // Initialize draggable windows
+        makeDraggable(aboutWindow, document.getElementById('aboutHeader'));
+        makeDraggable(projectsWindow, document.getElementById('projectsHeader'));
+        makeDraggable(contactWindow, document.getElementById('contactHeader'));
+        
+        // Function to open a window
+        function openWindow(window) {
+            overlay.classList.add('active');
+            window.classList.add('open');
+        }
+        
+        // Function to close all windows
+        function closeAllWindows() {
+            overlay.classList.remove('active');
+            aboutWindow.classList.remove('open');
+            projectsWindow.classList.remove('open');
+            contactWindow.classList.remove('open');
+        }
+        
+        // Event listeners for buttons
+        aboutBtn.addEventListener('click', () => openWindow(aboutWindow));
+        projectsBtn.addEventListener('click', () => openWindow(projectsWindow));
+        contactBtn.addEventListener('click', () => openWindow(contactWindow));
+        
+        // Close windows when clicking on overlay
+        overlay.addEventListener('click', closeAllWindows);
+        
+        // Close windows when clicking on close buttons
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', closeAllWindows);
+        });
+        
+        // Minimize functionality (simple hide for this demo)
+        document.querySelectorAll('.minimize-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.window-container').classList.remove('open');
+                overlay.classList.remove('active');
+            });
+        });
+        
+        // Maximize functionality (toggle between normal and maximized)
+        document.querySelectorAll('.maximize-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const window = this.closest('.window-container');
+                window.classList.toggle('maximized');
+                
+                if (window.classList.contains('maximized')) {
+                    window.style.width = '95%';
+                    window.style.height = '95%';
+                    window.style.top = '50%';
+                    window.style.left = '50%';
+                    window.style.transform = 'translate(-50%, -50%)';
+                } else {
+                    window.style.width = '';
+                    window.style.height = '';
+                }
+            });
+        });
+        
+        // Initial call to animate text
+        animateText();
+
+        // Add click event listener to toggle audio
+        audioControl.addEventListener('click', toggleAudio);
+    </script>
+</body>
+</html>
